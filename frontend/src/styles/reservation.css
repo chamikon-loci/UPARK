@@ -1,0 +1,72 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f6f8;
+    color: #222;
+}
+
+.reservation-container {
+    width: 90%;
+    width: 1000px;
+    margin: 40px auto;
+}
+
+.reservation-container h1 {
+    margin-bottom: 5px;
+    font-size: 30px;
+}
+
+.reservation-user {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.reservation-list {
+    display: grid;
+    gap: 20px;
+}
+
+.reservation-card {
+    background: white;
+    padding: 22px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.reservation-card h3 {
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-size: 19px;
+}
+
+.reservation-info {
+    margin: 8px 0;
+    font-size: 15px;
+    color: #444;
+    background-color: white;
+}
+
+.reservation-info strong {
+    color: #222;
+}
+
+.reservation-status {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 6px 12px;
+
+    background: #f0f0f0;
+    border-radius: 5px;
+
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.no-reservation {
+    padding: 30px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    color: #777;
+}

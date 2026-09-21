@@ -1,0 +1,56 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f6f8;
+    color: #222;
+}
+
+.parking-container {
+    width: 90%;
+    width: 1000px;
+    margin: 40px auto;
+}
+
+.parking-container h1 {
+    margin-bottom: 5px;
+}
+
+.parking-user {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.parking-list {
+    display: grid;
+    gap: 20px;
+}
+
+.parking-card {
+    background: white;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.parking-card h3 {
+    margin-top: 0;
+    margin-bottom: 18px;
+}
+
+.parking-info {
+    margin: 8px 0;
+    color: #444;
+}
+
+.parking-info strong {
+    color: #222;
+}
+
+.no-parking {
+    padding: 25px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    color: #777;
+}

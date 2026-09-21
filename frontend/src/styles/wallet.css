@@ -1,0 +1,120 @@
+* {
+    font-family: Arial, sans-serif;
+    background: #f7f5e8;
+}
+
+.wallet-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 60px;
+}
+
+.wallet-title {
+    margin: 0 0 25px;
+    font-size: 28px;
+    letter-spacing: 3px;
+    color: #345316;
+    background-color: #f7f5e8;
+}
+
+.wallet-box {
+    width: 420px;
+    padding: 35px;
+    border: 1px solid #222;
+    border-radius: 12px;
+    background-color: white;
+}
+
+.wallet-label {
+    margin: 0;
+    text-align: center;
+    color: #888;
+    background-color: white;
+}
+
+.balance {
+    margin: 8px 0 30px;
+    text-align: center;
+    font-size: 38px;
+    color: #345316;
+    background-color: white;
+}
+
+.topup-section {
+    padding-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    background-color: white;
+}
+
+.section-title {
+    margin: 0 0 12px;
+    color: #555;
+    font-size: 17px;
+    font-weight: bold;
+    background-color: white;
+}
+
+.topup-section form,
+.qr-section form {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+}
+
+.topup-section input,
+.qr-section input {
+    width: 100%;
+    height: 44px;
+    margin-bottom: 12px;
+    padding: 0 13px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    background-color: white;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.topup-section input:focus,
+.qr-section input:focus {
+    border-color: #6fbc21;
+}
+
+.topup-section button,
+.qr-section button {
+    width: 100%;
+    height: 44px;
+    border: none;
+    border-radius: 6px;
+    background: #6fbc21;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.topup-section button:hover,
+.qr-section button:hover {
+    background: #345316;
+}
+
+.qr-section {
+    padding-top: 25px;
+    text-align: center;
+    background-color: white;
+}
+
+.qr-section .section-title {
+    text-align: center;
+}
+
+.qr-code {
+    width: 220px;
+    height: 220px;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: white;
+}

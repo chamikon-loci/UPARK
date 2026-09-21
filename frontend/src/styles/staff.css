@@ -1,0 +1,224 @@
+* {
+    font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f7f5e8;
+}
+
+.staff-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 60px;
+    background-color: #f7f5e8;
+}
+
+.staff-title {
+    margin: 0 0 25px;
+    font-size: 28px;
+    letter-spacing: 3px;
+    color: #345316;
+    background-color: #f7f5e8;
+}
+
+.staff-box {
+    width: 420px;
+    padding: 35px;
+    border: 1px solid #222;
+    border-radius: 12px;
+    background-color: white;
+    box-sizing: border-box;
+}
+
+.staff-box * {
+    background-color: white;
+}
+
+.staff-box h1 {
+    margin: 0;
+    text-align: center;
+    color: #222;
+}
+
+.staff-description {
+    margin: 10px 0 30px;
+    text-align: center;
+    color: #888;
+}
+
+.parking-lot-section,
+.parking-slot-section,
+.reservation-section,
+.current-parking-section,
+.staff-form {
+    background-color: white;
+}
+
+.parking-lot-section h2,
+.parking-slot-section h2,
+.reservation-section h2,
+.current-parking-section h2,
+.staff-form h2 {
+    background-color: white;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    background-color: white;
+}
+
+.section-header h2 {
+    margin: 0;
+}
+
+.section-toggle {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    background-color: #555 !important;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.section-toggle:hover {
+    background-color: #333 !important;
+}
+
+.parking-lot-card,
+.parking-slot-card,
+.reservation-card,
+.current-parking-card {
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: white;
+    box-sizing: border-box;
+}
+
+.parking-lot-card h3,
+.parking-lot-card p,
+.parking-slot-card h3,
+.parking-slot-card p,
+.reservation-card h3,
+.reservation-card p,
+.current-parking-card h3,
+.current-parking-card p {
+    background-color: white;
+}
+
+.parking-lot-card h3,
+.parking-slot-card h3,
+.reservation-card h3,
+.current-parking-card h3 {
+    margin-top: 0;
+}
+
+.parking-lot-card p,
+.parking-slot-card p,
+.reservation-card p,
+.current-parking-card p {
+    margin: 7px 0;
+    color: #555;
+}
+
+.parking-slot-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.parking-slot-card button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+    background-color: #555;
+}
+
+.parking-slot-card button:hover {
+    background-color: #333;
+}
+
+.reservation-section {
+    margin-top: 30px;
+}
+
+.reservation-card {
+    margin-bottom: 15px;
+}
+
+.current-parking-section {
+    margin-top: 30px;
+}
+
+.current-parking-card {
+    margin-bottom: 15px;
+}
+
+.staff-form {
+    margin-top: 30px;
+}
+
+.input-title {
+    margin: 0 0 8px;
+    color: #555;
+    font-size: 15px;
+}
+
+.staff-form input {
+    width: 100%;
+    height: 44px;
+    margin-bottom: 20px;
+    padding: 0 13px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    background-color: white;
+    box-sizing: border-box;
+}
+
+.staff-form input:focus {
+    border-color: #6fbc21;
+    outline: none;
+}
+
+.staff-buttons {
+    display: flex;
+    gap: 10px;
+    background-color: white;
+}
+
+.staff-buttons button {
+    flex: 1;
+    height: 44px;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.checkin-button {
+    background: #6fbc21;
+}
+
+.checkin-button:hover {
+    background: #345316;
+}
+
+.checkout-button {
+    background: #555;
+}
+
+.checkout-button:hover {
+    background: #333;
+}

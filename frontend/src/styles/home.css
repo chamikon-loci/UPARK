@@ -1,0 +1,185 @@
+* {
+    font-family: Arial, sans-serif;
+    background: #f7f5e8;
+}
+
+.home-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 60px;
+}
+
+.home-header {
+    text-align: center;
+    background-color: #f7f5e8;
+    margin-bottom: 25px;
+}
+
+.home-header h2 {
+    margin: 0;
+    font-size: 28px;
+    letter-spacing: 10px;
+    color: #345316;
+    background-color: #f7f5e8;
+}
+
+.home-header p {
+    margin-top: 8px;
+    color: #888;
+    background-color: #f7f5e8;
+}
+
+.home-box {
+    width: 420px;
+    padding: 35px;
+    border: 1px solid #222;
+    border-radius: 12px;
+    background-color: white;
+    box-sizing: border-box;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.home-box h1 {
+    margin: 0;
+    text-align: center;
+    color: #222;
+    font-size: 26px;
+    background-color: white;
+}
+
+.home-description {
+    margin: 10px 0 25px;
+    text-align: center;
+    color: #888;
+    background-color: white;
+}
+
+.home-buttons {
+    display: flex;
+    gap: 10px;
+    background-color: white;
+    margin-bottom: 30px;
+}
+
+.home-buttons button {
+    flex: 1;
+    height: 42px;
+    border: 1px solid #6fbc21;
+    border-radius: 6px;
+    background: white;
+    color: #4f8d12;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.home-buttons button:hover {
+    background: #6fbc21;
+    color: white;
+}
+
+.search-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 25px;
+    border-top: 1px solid #eee;
+    background-color: white;
+}
+
+.search-title {
+    margin: 0 0 12px;
+    color: #555;
+    font-size: 17px;
+    font-weight: bold;
+    background-color: white;
+}
+
+.search-form input {
+    width: 100%;
+    height: 44px;
+    margin-bottom: 12px;
+    padding: 0 13px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    background-color: white;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.search-form input:focus {
+    border-color: #6fbc21;
+}
+
+.search-form input::placeholder {
+    color: #aaa;
+}
+
+.search-form button {
+    width: 100%;
+    height: 44px;
+    border: none;
+    border-radius: 6px;
+    background: #6fbc21;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.search-form button:hover {
+    background: #345316;
+}
+
+.home-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: white;
+    margin-bottom: 25px;
+}
+
+.home-menu button {
+    width: 100%;
+    height: 42px;
+    border: 1px solid #6fbc21;
+    border-radius: 6px;
+    background: white;
+    color: #4f8d12;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.home-menu button:hover {
+    background: #6fbc21;
+    color: white;
+}
+
+
+.current-parking {
+    background-color: white;
+    margin-bottom: 25px;
+}
+
+.section-title {
+    margin: 0 0 10px;
+    color: #555;
+    font-size: 17px;
+    font-weight: bold;
+    background-color: white;
+}
+
+.current-parking-box {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: #fafafa;
+}
+
+.no-parking {
+    margin: 0;
+    text-align: center;
+    color: #999;
+    background-color: #fafafa;
+}

@@ -1,0 +1,39 @@
+.slots-page {
+    padding: 30px;
+    background-color: #f7f5e8;
+}
+
+.slots-box {
+    width: 600px;
+    margin: auto;
+    padding: 30px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.slots-box h1 {
+    background-color: white;
+}
+
+.slot-button {
+    width: 150px;
+    height: 45px;
+    margin: 10px;
+    border: none;
+    border-radius: 6px;
+    background-color: #6fbc21;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.slot-button:hover {
+    background-color: #345316;
+}
+
+.no-slot {
+    background-color: white;
+    color: gray;
+}

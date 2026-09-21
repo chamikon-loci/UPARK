@@ -1,0 +1,103 @@
+* {
+    font-family: Arial, sans-serif;
+    background: #f7f5e8;
+}
+
+.admin-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 60px;
+}
+
+.admin-title {
+    margin: 0 0 25px;
+    font-size: 28px;
+    letter-spacing: 3px;
+    color: #345316;
+    background-color: #f7f5e8;
+}
+
+.admin-box {
+    width: 650px;
+    padding: 35px;
+    border: 1px solid #222;
+    border-radius: 12px;
+    background-color: white;
+}
+
+.admin-box h1 {
+    margin: 0;
+    text-align: center;
+    color: #222;
+    background-color: white;
+}
+
+.admin-description {
+    margin: 10px 0 30px;
+    text-align: center;
+    color: #888;
+    background-color: white;
+}
+
+.user-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: white;
+}
+
+.user-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 18px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fafafa;
+}
+
+.user-info {
+    background-color: #fafafa;
+}
+
+.username {
+    margin: 0 0 6px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    background-color: #fafafa;
+}
+
+.current-role {
+    margin: 0;
+    font-size: 13px;
+    color: #888;
+    background-color: #fafafa;
+}
+
+.current-role span {
+    color: #345316;
+    font-weight: bold;
+    background-color: #fafafa;
+}
+
+.user-card select {
+    width: 130px;
+    height: 38px;
+    padding: 0 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.user-card select:focus {
+    border-color: #6fbc21;
+}
+
+.user-card select:hover {
+    border-color: #6fbc21;
+}
