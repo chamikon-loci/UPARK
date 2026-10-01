@@ -10,22 +10,22 @@ const Staff = ({ user }) => {
     const [currentParking, setCurrentParking] = useState([]);
     const [showParkingSlots, setShowParkingSlots] = useState(false);
     const [showReservations, setShowReservations] = useState(false);
+    const [announcement, setAnnouncement] = useState("");
 
     const getParkingData = async () => {
         try {
-            const [lotRes, slotRes, reservationRes, currentParkingRes] = await Promise.all([
-                axios.get(`http://localhost:8080/api/staff/getParkingLot?user_id=${user.user_id}`, { withCredentials: true }),
-                axios.get(`http://localhost:8080/api/staff/getParkingSlots?user_id=${user.user_id}`, { withCredentials: true }),
-                axios.get(`http://localhost:8080/api/staff/getReservations?user_id=${user.user_id}`, { withCredentials: true }),
-                axios.get(`http://localhost:8080/api/staff/getCurrentParking?user_id=${user.user_id}`, { withCredentials: true })
-            ]);
+            const lotRes = await axios.get(`http://localhost:8080/api/staff/getParkingLot?user_id=${user.user_id}`, { withCredentials: true });
+            const slotRes = await axios.get(`http://localhost:8080/api/staff/getParkingSlots?user_id=${user.user_id}`,{ withCredentials: true });
+            const reservationRes = await axios.get(`http://localhost:8080/api/staff/getReservations?user_id=${user.user_id}`, { withCredentials: true });
+            const currentParkingRes = await axios.get(`http://localhost:8080/api/staff/getCurrentParking?user_id=${user.user_id}`,{ withCredentials: true });
 
             setParkingLots(lotRes.data.data);
             setParkingSlots(slotRes.data.data);
             setReservations(reservationRes.data.data);
             setCurrentParking(currentParkingRes.data.data);
+
         } catch (error) {
-            console.log("ดึงข้อมูล Staff ไม่สำเร็จ", error);
+            console.log("ดึงข้อมูล Staff ไม่สำเร็จ");
         }
     };
 
@@ -36,42 +36,36 @@ const Staff = ({ user }) => {
 
     const changeSlotStatus = async (parkingSlot_id, status) => {
         try {
-            const res = await axios.put(
-                "http://localhost:8080/api/staff/changeSlotStatus",
-                { parkingSlot_id, user_id: user.user_id, status },
-                { withCredentials: true }
-            );
+            const res = await axios.put("http://localhost:8080/api/staff/changeSlotStatus", { parkingSlot_id, user_id: user.user_id, status }, { withCredentials: true });
             alert(res.data.message);
             getParkingData();
         } catch (error) {
-            console.log(error.response?.data?.message);
-            alert(error.response?.data?.message || "เปลี่ยนสถานะช่องจอดไม่สำเร็จ");
+            alert("เปลี่ยนสถานะช่องจอดไม่สำเร็จ");
         }
     };
 
     const checkIn = async () => {
         try {
-            const res = await axios.post(
-                "http://localhost:8080/api/staff/checkin",
-                { license_plate: licensePlate, user_id: user.user_id },
-                { withCredentials: true }
-            );
+            if (!verifiedReservation) {
+                alert("กรุณาตรวจสอบ PIN ก่อน");
+                return;
+            }
+
+            const res = await axios.post("http://localhost:8080/api/staff/checkin",{ reservation_id: verifiedReservation.reservation_id, user_id: user.user_id}, { withCredentials: true } );
             alert(res.data.message);
-            setLicensePlate("");
+
+            setVerifiedReservation(null);
+            setPin("");
             getParkingData();
+
         } catch (error) {
-            console.log("Check In Error:", error);
-            alert(error.response?.data?.message || "Check In ไม่สำเร็จ");
+            alert("Check In ไม่สำเร็จ");
         }
     };
 
     const checkOut = async () => {
         try {
-            const res = await axios.post(
-                "http://localhost:8080/api/staff/checkout",
-                { license_plate: licensePlate, user_id: user.user_id },
-                { withCredentials: true }
-            );
+            const res = await axios.post("http://localhost:8080/api/staff/checkout", { license_plate: licensePlate, user_id: user.user_id },{ withCredentials: true });
             alert(
                 `${res.data.message}\n` +
                 `เวลาจอง: ${res.data.reserved_hours} ชั่วโมง\n` +
@@ -83,8 +77,35 @@ const Staff = ({ user }) => {
             setLicensePlate("");
             getParkingData();
         } catch (error) {
-            console.log("Check Out Error:", error);
-            alert(error.response?.data?.message || "Check Out ไม่สำเร็จ");
+            alert("Check Out ไม่สำเร็จ");
+        }
+    };
+
+    const [pin, setPin] = useState("");
+    const [verifiedReservation, setVerifiedReservation] = useState(null);
+
+    const verifyPin = async () => {
+        try {
+            const res = await axios.post("http://localhost:8080/api/staff/verifyPin",{ pin_code: pin, user_id: user.user_id}, { withCredentials: true });
+            setVerifiedReservation(res.data.data);
+            alert("PIN ถูกต้อง");
+        } catch (error) {
+            alert("ตรวจสอบ PIN ไม่สำเร็จ");
+        }
+    };
+
+    const sendAnnouncement = async () => {
+        try {
+            if (!announcement.trim()) {
+                alert("กรุณากรอกข้อความประกาศ");
+                return;
+            } 
+            const res = await axios.post("http://localhost:8080/api/staff/announcement", { user_id: user.user_id, message: announcement }, { withCredentials: true });
+            alert(res.data.message);
+            setAnnouncement("");
+
+        } catch (error) {
+            alert("ส่งประกาศไม่สำเร็จ");
         }
     };
 
@@ -98,7 +119,6 @@ const Staff = ({ user }) => {
                 <h1>Staff</h1>
                 <p className="staff-description">จัดการลานจอดและการเข้าออกของรถ</p>
 
-                {/* ลานจอดที่รับผิดชอบ */}
                 <div className="parking-lot-section">
                     <h2>ลานจอดที่รับผิดชอบ</h2>
                     {parkingLots.length === 0 ? (
@@ -113,8 +133,18 @@ const Staff = ({ user }) => {
                         ))
                     )}
                 </div>
+                <div className="staff-form">
 
-                {/* ช่องจอด */}
+                    <h2>Announcement</h2>
+                    <p className="input-title"> ข้อความประกาศ</p>
+
+                    <textarea placeholder="กรอกข้อความที่ต้องการประกาศ" value={announcement} onChange={(e) => setAnnouncement(e.target.value)}/>
+
+                    <div className="staff-buttons">
+                        <button onClick={sendAnnouncement}>ส่งประกาศ</button>
+                    </div>
+                </div>
+
                 <div className="parking-slot-section">
                     <div className="section-header">
                         <h2>ช่องจอด</h2>
@@ -135,14 +165,10 @@ const Staff = ({ user }) => {
                                         <p>สถานะ: {slot.status}</p>
                                     </div>
                                     {slot.status === "Available" && (
-                                        <button onClick={() => changeSlotStatus(slot.parkingslot_id, "Closed")}>
-                                            ปิดช่องจอด
-                                        </button>
+                                        <button onClick={() => changeSlotStatus(slot.parkingslot_id, "Closed")}>ปิดช่องจอด</button>
                                     )}
                                     {slot.status === "Closed" && (
-                                        <button onClick={() => changeSlotStatus(slot.parkingslot_id, "Available")}>
-                                            เปิดช่องจอด
-                                        </button>
+                                        <button onClick={() => changeSlotStatus(slot.parkingslot_id, "Available")}>เปิดช่องจอด</button>
                                     )}
                                 </div>
                             ))
@@ -150,7 +176,6 @@ const Staff = ({ user }) => {
                     )}
                 </div>
 
-                {/* Reservation */}
                 <div className="reservation-section">
                     <div className="section-header">
                         <h2>Reservation</h2>
@@ -181,7 +206,6 @@ const Staff = ({ user }) => {
                     )}
                 </div>
 
-                {/* รถที่กำลังจอด */}
                 <div className="current-parking-section">
                     <h2>รถที่กำลังจอด</h2>
                     {currentParking.length === 0 ? (
@@ -201,21 +225,32 @@ const Staff = ({ user }) => {
                     )}
                 </div>
 
-                {/* Check In / Check Out Form */}
                 <div className="staff-form">
-                    <h2>Check In / Check Out</h2>
+                    <h2>Check Out</h2>
                     <p className="input-title">License Plate</p>
-                    <input
-                        placeholder="เลขทะเบียนรถ"
-                        value={licensePlate}
-                        onChange={(e) => setLicensePlate(e.target.value)}
-                    />
+                    <input placeholder="เลขทะเบียนรถ" value={licensePlate} onChange={(e) => setLicensePlate(e.target.value)}/>
                     <div className="staff-buttons">
-                        <button className="checkin-button" onClick={checkIn}>Check In</button>
-                        <button className="checkout-button" onClick={checkOut}>Check Out</button>
+                        <button className="checkout-button" onClick={checkOut}> Check Out</button>
                     </div>
                 </div>
 
+                <div>
+                    <h3>PIN Verification</h3>
+                    <input type="text" value={pin} onChange={(e) => setPin(e.target.value)} placeholder="กรอก PIN 6 หลัก" maxLength={6}/>
+                    <button onClick={verifyPin}>ตรวจสอบ PIN</button>
+
+                </div>
+                {verifiedReservation && (
+                    <div>
+                        <h3>Reservation Information</h3>
+                        <p>รถ:{verifiedReservation.car_brand} {" "} {verifiedReservation.car_model}</p>
+                        <p>ทะเบียน:{verifiedReservation.license_plate}</p>
+                        <p>ช่องจอด:{verifiedReservation.parkingSlot_name}</p>
+                        <p>เวลาเริ่ม:{new Date(verifiedReservation.start_time).toLocaleString()}</p>
+                        <p>วลาสิ้นสุด:{new Date(verifiedReservation.end_time).toLocaleString()}</p>
+                        <button onClick={checkIn}>Check In</button>
+                    </div>
+                )}
             </div>
         </div>
     );

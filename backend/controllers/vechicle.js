@@ -17,4 +17,4 @@ export const getCar = async (req, res) => {
 
     const car = await pool.query(`SELECT * FROM vechicles`);
     res.json({car: car.rows});
-}
+}   

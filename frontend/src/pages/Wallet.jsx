@@ -46,7 +46,7 @@ const Wallet = ({user, wallet}) => {
                     <div className="topup-section">
                         <p className="section-title">Top Up Wallet</p>
                         <form onSubmit={handleTopup}>
-                            <input type='number' placeholder="จำนวนเงิน" value={amount} onChange={(e) => setAmount(e.target.value)} />
+                            <input required type='number' placeholder="จำนวนเงิน" value={amount} onChange={(e) => setAmount(e.target.value)} />
                             <button>เติมเงิน</button>
                         </form>
                     </div>

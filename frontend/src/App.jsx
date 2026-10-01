@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { io } from "socket.io-client";
 
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -14,7 +15,8 @@ import Staff from './pages/Staff';
 import Reservation from './pages/Reservation';
 import Transaction from './pages/Transaction';
 import Parking from './pages/Parking';
-
+import Rating from './pages/Rating';
+import Manager from './pages/Manager';
 
 function App() {
 
@@ -46,12 +48,34 @@ function App() {
     fetchUserData();
   }, []) 
 
+  useEffect(() => {
+      if (!user) return;
+
+      const socket = io("http://localhost:8080", { withCredentials: true});
+
+      socket.emit("joinUser", user.user_id);
+      socket.on("queueCalled", (data) => {
+          alert(data.message);
+      });
+
+      socket.on("slotAvailable", (data) => {
+          alert(data.message);
+      });
+
+      socket.on("announcement", (data) => {
+        alert(`ประกาศจาก Staff\n\n${data.message}`);
+    });
+
+    return () => {
+        socket.disconnect();
+    };
+  }, [user]);
+
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/register" element={<Register />}/>
         <Route path="/" element={<Login setUser={setUser} />}/>
-
         <Route path="/home" element={<Home user={user}/>}/>
         <Route path="/home/carinfo" element={<CarInfo user={user} car={car} />} />
         <Route path="/home/wallet" element={<Wallet user={user} wallet={wallet}/>} />
@@ -62,7 +86,8 @@ function App() {
         <Route path="/home/reservation" element={<Reservation user={user} />} />
         <Route path="/home/transaction" element={<Transaction user={user} />} />
         <Route path="/home/parking" element={<Parking user={user} />} />
-
+        <Route path="/home/rating" element={<Rating user={user} />} />
+        <Route path="/Manager" element={<Manager user={user} />}/>
       </Routes>
     </BrowserRouter>
   )

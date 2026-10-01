@@ -8,20 +8,20 @@ body {
 }
 
 .staff-container {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 60px;
-    background-color: #f7f5e8;
+    padding: 60px 0;
+    background: #f7f5e8;
 }
 
 .staff-title {
     margin: 0 0 25px;
     font-size: 28px;
-    letter-spacing: 3px;
+    letter-spacing: 10px;
     color: #345316;
-    background-color: #f7f5e8;
+    background: #f7f5e8;
 }
 
 .staff-box {
@@ -29,8 +29,9 @@ body {
     padding: 35px;
     border: 1px solid #222;
     border-radius: 12px;
-    background-color: white;
+    background: white;
     box-sizing: border-box;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .staff-box * {
@@ -41,6 +42,7 @@ body {
     margin: 0;
     text-align: center;
     color: #222;
+    font-size: 26px;
 }
 
 .staff-description {
@@ -62,33 +64,10 @@ body {
 .reservation-section h2,
 .current-parking-section h2,
 .staff-form h2 {
+    margin: 0 0 15px;
+    color: #555;
+    font-size: 17px;
     background-color: white;
-}
-
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    background-color: white;
-}
-
-.section-header h2 {
-    margin: 0;
-}
-
-.section-toggle {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 6px;
-    color: white;
-    background-color: #555 !important;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.section-toggle:hover {
-    background-color: #333 !important;
 }
 
 .parking-lot-card,
@@ -98,7 +77,7 @@ body {
     padding: 15px;
     margin-bottom: 15px;
     border: 1px solid #ddd;
-    border-radius: 8px;
+    border-radius: 6px;
     background-color: white;
     box-sizing: border-box;
 }
@@ -119,6 +98,7 @@ body {
 .reservation-card h3,
 .current-parking-card h3 {
     margin-top: 0;
+    color: #222;
 }
 
 .parking-lot-card p,
@@ -129,23 +109,57 @@ body {
     color: #555;
 }
 
+.parking-slot-section {
+    margin-top: 30px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    background-color: white;
+}
+
+.section-header h2 {
+    margin: 0;
+}
+
+.section-toggle {
+    padding: 8px 12px;
+    border: 1px solid #6fbc21;
+    border-radius: 6px;
+    color: #4f8d12;
+    background-color: white !important;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.section-toggle:hover {
+    background-color: #6fbc21 !important;
+    color: white;
+}
+
 .parking-slot-card {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 15px;
 }
 
 .parking-slot-card button {
-    padding: 10px 15px;
-    border: none;
+    padding: 9px 13px;
+    border: 1px solid #6fbc21;
     border-radius: 6px;
+    color: #4f8d12;
+    background-color: white;
     cursor: pointer;
-    color: white;
-    background-color: #555;
+    font-size: 14px;
 }
 
 .parking-slot-card button:hover {
-    background-color: #333;
+    background-color: #6fbc21;
+    color: white;
 }
 
 .reservation-section {
@@ -166,29 +180,42 @@ body {
 
 .staff-form {
     margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid #eee;
 }
 
 .input-title {
     margin: 0 0 8px;
     color: #555;
     font-size: 15px;
+    background-color: white;
 }
 
-.staff-form input {
+.staff-form input,
+.staff-form textarea {
     width: 100%;
-    height: 44px;
-    margin-bottom: 20px;
-    padding: 0 13px;
+    padding: 12px 13px;
+    margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 15px;
     background-color: white;
     box-sizing: border-box;
+    outline: none;
 }
 
-.staff-form input:focus {
+.staff-form input {
+    height: 44px;
+}
+
+.staff-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.staff-form input:focus,
+.staff-form textarea:focus {
     border-color: #6fbc21;
-    outline: none;
 }
 
 .staff-buttons {
@@ -203,8 +230,13 @@ body {
     border: none;
     border-radius: 6px;
     color: white;
+    background: #6fbc21;
     font-size: 15px;
     cursor: pointer;
+}
+
+.staff-buttons button:hover {
+    background: #345316;
 }
 
 .checkin-button {
@@ -221,4 +253,47 @@ body {
 
 .checkout-button:hover {
     background: #333;
+}
+
+.staff-box > div > h3 {
+    color: #555;
+    background-color: white;
+    font-size: 17px;
+}
+
+.staff-box > div > p {
+    color: #555;
+    background-color: white;
+}
+
+.staff-box > div > input {
+    width: 100%;
+    height: 44px;
+    padding: 0 13px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    background-color: white;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.staff-box > div > input:focus {
+    border-color: #6fbc21;
+}
+
+.staff-box > div > button {
+    height: 44px;
+    padding: 0 18px;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    background: #6fbc21;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.staff-box > div > button:hover {
+    background: #345316;
 }

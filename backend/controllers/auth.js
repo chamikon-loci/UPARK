@@ -17,7 +17,7 @@ export const register = async (req,res) => {
     if(existEmail.rows.length > 0) return res.status(400).json({message: 'ที่อยู่อีเมลซ้ำ'});
 
     const existUsername = await pool.query('SELECT * FROM users WHERE username = $1', [username])
-    if(existUsername.length > 0) return res.status(400).json({message: 'ชื่อผู้ใช้ซ้ำ'});
+    if(existUsername.rows.length > 0) return res.status(400).json({message: 'ชื่อผู้ใช้ซ้ำ'});
 
     const hashed_password = await bcrypt.hash(password, 10);
 

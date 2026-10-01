@@ -1,435 +1,315 @@
 import pool from "../database/db.js";
+import { autoReserveFromQueue } from "./queue.js";
 
 export const getMyParkingLot = async (req, res) => {
     try {
         const { user_id } = req.query;
-
-        const parkingLot = await pool.query(`
-            SELECT
-                p.parkingLot_id,
-                p.parkingLot_name,
-                p.latitude,
-                p.longitude,
-                p.price_per_hour,
-                p.open_time,
-                p.close_time
+        const { rows } = await pool.query(`
+            SELECT p.parkingLot_id,p.parkingLot_name,p.latitude,p.longitude,
+                   p.price_per_hour,p.open_time,p.close_time
             FROM parkingLotStaff ps
-            JOIN parkingLots p
-                ON ps.parkingLot_id = p.parkingLot_id
-            WHERE ps.user_id = $1
+            JOIN parkingLots p ON ps.parkingLot_id=p.parkingLot_id
+            WHERE ps.user_id=$1
         `, [user_id]);
 
-        res.json({
-            data: parkingLot.rows
-        });
-
+        res.json({ data: rows });
     } catch (error) {
         console.error(error);
-
-        res.status(500).json({
-            message: "ไม่สามารถดึงข้อมูลลานจอดได้"
-        });
+        res.status(500).json({ message: "ไม่สามารถดึงข้อมูลลานจอดได้" });
     }
 };
 
 export const getMyParkingSlots = async (req, res) => {
     try {
         const { user_id } = req.query;
-
-        const parkingSlots = await pool.query(`
-            SELECT
-                s.parkingSlot_id,
-                s.parkingSlot_name,
-                s.status,
-                p.parkingLot_id,
-                p.parkingLot_name
+        const { rows } = await pool.query(`
+            SELECT s.parkingSlot_id,s.parkingSlot_name,s.status,
+                   p.parkingLot_id,p.parkingLot_name
             FROM parkingSlots s
-            JOIN parkingLots p
-                ON s.parkingLot_id = p.parkingLot_id
-            JOIN parkingLotStaff ps
-                ON p.parkingLot_id = ps.parkingLot_id
-            WHERE ps.user_id = $1
+            JOIN parkingLots p ON s.parkingLot_id=p.parkingLot_id
+            JOIN parkingLotStaff ps ON p.parkingLot_id=ps.parkingLot_id
+            WHERE ps.user_id=$1
             ORDER BY s.parkingSlot_id
         `, [user_id]);
 
-        res.json({
-            data: parkingSlots.rows
-        });
-
+        res.json({ data: rows });
     } catch (error) {
         console.error(error);
-
-        res.status(500).json({
-            message: "ไม่สามารถดึงข้อมูลช่องจอดได้"
-        });
+        res.status(500).json({ message: "ไม่สามารถดึงข้อมูลช่องจอดได้" });
     }
 };
 
 export const getMyReservations = async (req, res) => {
     try {
         const { user_id } = req.query;
-
-        const reservations = await pool.query(`
-            SELECT
-                r.reservation_id,
-                r.start_time,
-                r.end_time,
-                r.total_price,
-                r.advance_deposit,
-                r.created_at,
-
-                v.car_brand,
-                v.car_model,
-                v.license_plate,
-                v.province,
-
-                p.parkingLot_id,
-                p.parkingLot_name,
-
-                s.parkingSlot_id,
-                s.parkingSlot_name,
-
-                c.check_in_status,
-                c.check_out_status,
-                c.check_in_at,
-                c.check_out_at
-
+        const { rows } = await pool.query(`
+            SELECT r.reservation_id,r.start_time,r.end_time,r.total_price,
+                   r.advance_deposit,r.created_at,v.car_brand,v.car_model,
+                   v.license_plate,v.province,p.parkingLot_id,p.parkingLot_name,
+                   s.parkingSlot_id,s.parkingSlot_name,c.check_in_status,
+                   c.check_out_status,c.check_in_at,c.check_out_at
             FROM reservations r
-            JOIN vechicles v ON r.vechicle_id = v.vechicle_id
-            JOIN parkingSlots s ON r.parkingSlot_id = s.parkingSlot_id
-            JOIN parkingLots p ON s.parkingLot_id = p.parkingLot_id
-            JOIN parkingLotStaff ps ON p.parkingLot_id = ps.parkingLot_id
-            LEFT JOIN check_in_outs c ON r.reservation_id = c.reservation_id
-
-            WHERE ps.user_id = $1
-
+            JOIN vechicles v ON r.vechicle_id=v.vechicle_id
+            JOIN parkingSlots s ON r.parkingSlot_id=s.parkingSlot_id
+            JOIN parkingLots p ON s.parkingLot_id=p.parkingLot_id
+            JOIN parkingLotStaff ps ON p.parkingLot_id=ps.parkingLot_id
+            LEFT JOIN check_in_outs c ON r.reservation_id=c.reservation_id
+            WHERE ps.user_id=$1
             ORDER BY r.start_time ASC
         `, [user_id]);
 
-        res.json({
-            data: reservations.rows
-        });
-
+        res.json({ data: rows });
     } catch (error) {
         console.error(error);
-
-        res.status(500).json({
-            message: "ไม่สามารถดึงข้อมูล Reservation ได้"
-        });
+        res.status(500).json({ message: "ไม่สามารถดึงข้อมูล Reservation ได้" });
     }
 };
 
 export const getMyCurrentParking = async (req, res) => {
     try {
         const { user_id } = req.query;
-
-        const currentParking = await pool.query(`
-            SELECT
-                r.reservation_id,
-                r.start_time,
-                r.end_time,
-
-                v.car_brand,
-                v.car_model,
-                v.license_plate,
-                v.province,
-
-                p.parkingLot_id,
-                p.parkingLot_name,
-
-                s.parkingSlot_id,
-                s.parkingSlot_name,
-
-                c.check_in_at
-
+        const { rows } = await pool.query(`
+            SELECT r.reservation_id,r.end_time,v.car_brand,v.car_model,
+                   v.license_plate,v.province,p.parkingLot_name,
+                   s.parkingSlot_name,c.check_in_status,c.check_out_status,
+                   c.check_in_at
             FROM reservations r
-            JOIN vechicles v ON r.vechicle_id = v.vechicle_id
-            JOIN parkingSlots s ON r.parkingSlot_id = s.parkingSlot_id
-            JOIN parkingLots p ON s.parkingLot_id = p.parkingLot_id
-            JOIN parkingLotStaff ps ON p.parkingLot_id = ps.parkingLot_id
-            JOIN check_in_outs c ON r.reservation_id = c.reservation_id
-            WHERE ps.user_id = $1 AND c.check_in_status = 'Checked In' AND c.check_out_status IS NULL
-            ORDER BY c.check_in_at ASC
+            JOIN vechicles v ON r.vechicle_id=v.vechicle_id
+            JOIN parkingSlots s ON r.parkingSlot_id=s.parkingSlot_id
+            JOIN parkingLots p ON s.parkingLot_id=p.parkingLot_id
+            JOIN check_in_outs c ON r.reservation_id=c.reservation_id
+            JOIN parkingLotStaff ps ON p.parkingLot_id=ps.parkingLot_id
+            WHERE ps.user_id=$1 AND c.check_in_status='Checked In' AND c.check_out_status IS NULL
+            ORDER BY c.check_in_at DESC
         `, [user_id]);
 
-        res.json({
-            data: currentParking.rows
-        });
-
+        res.json({ data: rows });
     } catch (error) {
         console.error(error);
-
-        res.status(500).json({
-            message: "ไม่สามารถดึงข้อมูลรถที่กำลังจอดได้"
-        });
+        res.status(500).json({ message: "ไม่สามารถดึงข้อมูลรถที่กำลังจอดได้" });
     }
 };
 
 export const changeSlotStatus = async (req, res) => {
     try {
-        const { parkingSlot_id, user_id, status } = req.body;
+        const { parkingSlot_id,user_id,status } = req.body;
 
-        if (
-            status !== "Available" &&
-            status !== "Closed"
-        ) {
-            return res.status(400).json({
-                message: "สามารถเปลี่ยนได้เฉพาะ Available และ Closed"
-            });
-        }
+        if (!["Available","Closed"].includes(status))
+            return res.status(400).json({ message: "สามารถเปลี่ยนได้เฉพาะ Available และ Closed" });
 
         const slot = await pool.query(`
-            SELECT
-                s.parkingSlot_id,
-                s.status
+            SELECT s.parkingSlot_id,s.status,s.parkingLot_id
             FROM parkingSlots s
-            JOIN parkingLotStaff ps ON s.parkingLot_id = ps.parkingLot_id
-            WHERE s.parkingSlot_id = $1 AND ps.user_id = $2
-        `, [
-            parkingSlot_id,
-            user_id
-        ]);
+            JOIN parkingLotStaff ps ON s.parkingLot_id=ps.parkingLot_id
+            WHERE s.parkingSlot_id=$1 AND ps.user_id=$2
+        `, [parkingSlot_id,user_id]);
 
-        if (!slot.rows.length) {
-            return res.status(404).json({
-                message: "ไม่พบช่องจอดหรือคุณไม่ได้รับผิดชอบลานนี้"
-            });
-        }
+        if (!slot.rows.length)
+            return res.status(404).json({ message: "ไม่พบช่องจอดหรือคุณไม่ได้รับผิดชอบลานนี้" });
 
-        if (
-            slot.rows[0].status !== "Available" &&
-            slot.rows[0].status !== "Closed"
-        ) {
-            return res.status(400).json({
-                message: "ไม่สามารถเปิดหรือปิดช่องจอดนี้ได้"
-            });
-        }
+        if (!["Available","Closed"].includes(slot.rows[0].status))
+            return res.status(400).json({ message: "ไม่สามารถเปิดหรือปิดช่องจอดนี้ได้" });
 
         await pool.query(`
-            UPDATE parkingSlots
-            SET status = $1
-            WHERE parkingSlot_id = $2
-        `, [
-            status,
-            parkingSlot_id
-        ]);
+            UPDATE parkingSlots SET status=$1
+            WHERE parkingSlot_id=$2
+        `, [status,parkingSlot_id]);
 
-        res.json({
-            message: status === "Closed"
-                ? "ปิดช่องจอดสำเร็จ"
-                : "เปิดช่องจอดสำเร็จ"
-        });
+        const io = req.app.get("io");
 
+        if (io) io.emit("parkingUpdate");
+
+        if (status === "Available")
+            await autoReserveFromQueue(slot.rows[0].parkinglot_id,io);
+
+        res.json({ message: "เปลี่ยนสถานะช่องจอดสำเร็จ" });
     } catch (error) {
         console.error(error);
-
-        res.status(500).json({
-            message: "เปลี่ยนสถานะช่องจอดไม่สำเร็จ"
-        });
+        res.status(500).json({ message: "เปลี่ยนสถานะช่องจอดไม่สำเร็จ" });
     }
 };
 
 export const checkIn = async (req, res) => {
     try {
-        const { license_plate, user_id } = req.body;
+        const { reservation_id,user_id } = req.body;
 
-        const result = await pool.query(`
-            SELECT
-                r.reservation_id,
-                r.start_time,
-                r.end_time,
-                r.parkingSlot_id AS parking_slot_id,
-                s.parkingLot_id AS parkinglot_id
+        if (!reservation_id || !user_id)
+            return res.status(400).json({ message: "ข้อมูลไม่ครบ" });
+
+        const reservation = await pool.query(`
+            SELECT r.*,v.license_plate,s.parkingSlot_id,s.parkingLot_id,
+                   p.price_per_hour
             FROM reservations r
-            JOIN vechicles v ON r.vechicle_id = v.vechicle_id
-            JOIN parkingSlots s ON r.parkingSlot_id = s.parkingSlot_id
-            WHERE v.license_plate = $1
-            ORDER BY r.reservation_id DESC
-            LIMIT 1
-        `, [license_plate]);
+            JOIN vechicles v ON r.vechicle_id=v.vechicle_id
+            JOIN parkingSlots s ON r.parkingSlot_id=s.parkingSlot_id
+            JOIN parkingLots p ON s.parkingLot_id=p.parkingLot_id
+            WHERE r.reservation_id=$1
+        `, [reservation_id]);
 
-        if (result.rows.length === 0)
-            return res.status(404).json({
-                message: "ไม่พบ Reservation ของรถคันนี้"
-            });
+        if (!reservation.rows.length)
+            return res.status(404).json({ message: "ไม่พบ Reservation" });
 
-        const reservation = result.rows[0];
+        const data = reservation.rows[0];
 
         const staff = await pool.query(`
-            SELECT parkingLotStaff_id
-            FROM parkingLotStaff
-            WHERE user_id = $1
-            AND parkingLot_id = $2
-        `, [
-            user_id,
-            reservation.parkinglot_id
-        ]);
+            SELECT * FROM parkingLotStaff
+            WHERE user_id=$1 AND parkingLot_id=$2
+        `, [user_id,data.parkinglot_id]);
 
         if (!staff.rows.length)
-            return res.status(403).json({
-                message: "คุณไม่ได้รับผิดชอบลานจอดนี้"
-            });
+            return res.status(403).json({ message: "คุณไม่ได้รับผิดชอบลานจอดนี้" });
 
-        if (new Date() < new Date(reservation.start_time))
+        const now = new Date();
+        const startTime = new Date(data.start_time);
+        const endTime = new Date(data.end_time);
+
+        if (now > endTime)
+            return res.status(400).json({ message: "Reservation นี้หมดเวลาแล้ว" });
+
+        const lateMinutes = (now-startTime)/60000;
+
+        if (lateMinutes > 20) {
+            await pool.query(`
+                UPDATE parkingSlots SET status='Available'
+                WHERE parkingSlot_id=$1
+            `, [data.parkingslot_id]);
+
+            await pool.query(`
+                DELETE FROM reservations
+                WHERE reservation_id=$1
+            `, [data.reservation_id]);
+
+            const io = req.app.get("io");
+
+            if (io) io.emit("parkingUpdate");
+
+            await autoReserveFromQueue(data.parkinglot_id,io);
+
             return res.status(400).json({
-                message: "ยังไม่ถึงเวลา Check In"
+                message: "มาถึงช้าเกิน 20 นาที Reservation ถูกยกเลิกและไม่คืนเงินมัดจำ"
             });
+        }
 
         const check = await pool.query(`
-            SELECT check_id
-            FROM check_in_outs
-            WHERE reservation_id = $1
-        `, [reservation.reservation_id]);
+            SELECT * FROM check_in_outs
+            WHERE reservation_id=$1
+        `, [data.reservation_id]);
 
-        if (check.rows.length > 0)
-            return res.status(400).json({
-                message: "รถคันนี้ Check In ไปแล้ว"
-            });
+        if (check.rows.length)
+            return res.status(400).json({ message: "Reservation นี้ Check In ไปแล้ว" });
 
         await pool.query(`
             INSERT INTO check_in_outs
-            (reservation_id, check_in_status, check_in_at)
-            VALUES ($1, 'Checked In', NOW())
-        `, [reservation.reservation_id]);
+            (reservation_id,check_in_status,check_in_at)
+            VALUES ($1,'Checked In',NOW())
+        `, [data.reservation_id]);
 
         await pool.query(`
-            UPDATE parkingSlots
-            SET status = 'Occupied'
-            WHERE parkingSlot_id = $1
-        `, [reservation.parking_slot_id]);
+            UPDATE parkingSlots SET status='Occupied'
+            WHERE parkingSlot_id=$1
+        `, [data.parkingslot_id]);
 
-        res.json({
-            message: "Check In สำเร็จ",
-            data: reservation
-        });
+        const io = req.app.get("io");
 
+        if (io) io.emit("parkingUpdate");
+
+        res.json({ message: "Check-in สำเร็จ" });
     } catch (error) {
         console.error(error);
-
-        res.status(500).json({
-            message: "Check In ไม่สำเร็จ"
-        });
+        res.status(500).json({ message: "Check In ไม่สำเร็จ" });
     }
 };
 
 export const checkOut = async (req, res) => {
     try {
-        const { license_plate, user_id } = req.body;
+        const { license_plate,user_id } = req.body;
 
         const result = await pool.query(`
-            SELECT
-                r.reservation_id,
-                r.parkingSlot_id AS parking_slot_id,
-                r.user_id,
-                r.start_time,
-                r.end_time,
-                r.advance_deposit,
-                p.price_per_hour,
-                c.check_in_at,
-                s.parkingLot_id AS parkinglot_id
+            SELECT r.reservation_id,r.parkingSlot_id AS parking_slot_id,
+                   r.user_id,r.start_time,r.end_time,r.advance_deposit,
+                   p.price_per_hour,c.check_in_at,
+                   s.parkingLot_id AS parkinglot_id
             FROM reservations r
-            JOIN vechicles v ON r.vechicle_id = v.vechicle_id
-            JOIN parkingSlots s ON r.parkingSlot_id = s.parkingSlot_id
-            JOIN parkingLots p ON s.parkingLot_id = p.parkingLot_id
-            JOIN check_in_outs c ON r.reservation_id = c.reservation_id
-            WHERE v.license_plate = $1 AND c.check_in_status = 'Checked In' AND c.check_out_status IS NULL
+            JOIN vechicles v ON r.vechicle_id=v.vechicle_id
+            JOIN parkingSlots s ON r.parkingSlot_id=s.parkingSlot_id
+            JOIN parkingLots p ON s.parkingLot_id=p.parkingLot_id
+            JOIN check_in_outs c ON r.reservation_id=c.reservation_id
+            WHERE v.license_plate=$1 AND c.check_in_status='Checked In' AND c.check_out_status IS NULL
             LIMIT 1
         `, [license_plate]);
 
-        if (result.rows.length === 0)
-            return res.status(404).json({
-                message: "ไม่พบรถที่กำลังจอดอยู่"
-            });
+        if (!result.rows.length)
+            return res.status(404).json({ message: "ไม่พบรถที่กำลังจอดอยู่" });
 
         const car = result.rows[0];
 
         const staff = await pool.query(`
-            SELECT parkingLotStaff_id
-            FROM parkingLotStaff
-            WHERE user_id = $1
-            AND parkingLot_id = $2
-        `, [
-            user_id,
-            car.parkinglot_id
-        ]);
+            SELECT parkingLotStaff_id FROM parkingLotStaff
+            WHERE user_id=$1 AND parkingLot_id=$2
+        `, [user_id,car.parkinglot_id]);
 
         if (!staff.rows.length)
-            return res.status(403).json({
-                message: "คุณไม่ได้รับผิดชอบลานจอดนี้"
-            });
+            return res.status(403).json({ message: "คุณไม่ได้รับผิดชอบลานจอดนี้" });
 
         const now = new Date();
         const endTime = new Date(car.end_time);
 
         const reservedHours = Math.ceil(
-            (new Date(car.end_time) - new Date(car.start_time)) / 3600000
+            (new Date(car.end_time)-new Date(car.start_time))/3600000
         );
 
-        let overtimeHours = 0;
+        const overtimeHours = now > endTime
+            ? Math.ceil((now-endTime)/3600000)
+            : 0;
 
-        if (now > endTime) {
-            overtimeHours = Math.ceil(
-                (now - endTime) / 3600000
-            );
-        }
-
-        const total =
-            (reservedHours + overtimeHours) *
-            car.price_per_hour;
-
-        const remaining = Math.max(
-            total - car.advance_deposit,
-            0
-        );
+        const total = (reservedHours+overtimeHours)*car.price_per_hour;
+        const remaining = Math.max(total-car.advance_deposit,0);
 
         const wallet = await pool.query(`
-            SELECT wallet_id, balance
-            FROM wallets
-            WHERE user_id = $1
+            SELECT wallet_id,balance FROM wallets
+            WHERE user_id=$1
         `, [car.user_id]);
 
         if (!wallet.rows.length)
-            return res.status(400).json({
-                message: "ไม่พบ Wallet"
-            });
+            return res.status(400).json({ message: "ไม่พบ Wallet" });
 
         if (wallet.rows[0].balance < remaining)
-            return res.status(400).json({
-                message: "เงินใน Wallet ไม่เพียงพอ"
-            });
+            return res.status(400).json({ message: "เงินใน Wallet ไม่เพียงพอ" });
 
         if (remaining > 0) {
             await pool.query(`
-                UPDATE wallets
-                SET balance = balance - $1
-                WHERE user_id = $2
-            `, [
-                remaining,
-                car.user_id
-            ]);
+                UPDATE wallets SET balance=balance-$1
+                WHERE user_id=$2
+            `, [remaining,car.user_id]);
 
             await pool.query(`
                 INSERT INTO transactions
-                (wallet_id, transaction_type, amount, created_at)
-                VALUES ($1, 'Parking Fee', $2, NOW())
-            `, [
-                wallet.rows[0].wallet_id,
-                remaining
-            ]);
+                (wallet_id,transaction_type,amount,created_at)
+                VALUES ($1,'Parking Fee',$2,NOW())
+            `, [wallet.rows[0].wallet_id,remaining]);
         }
 
         await pool.query(`
+            UPDATE reservations SET total_price=$1
+            WHERE reservation_id=$2
+        `, [total,car.reservation_id]);
+
+        await pool.query(`
             UPDATE check_in_outs
-            SET check_out_status = 'Checked Out',
-                check_out_at = NOW()
-            WHERE reservation_id = $1
+            SET check_out_status='Checked Out',check_out_at=NOW()
+            WHERE reservation_id=$1
         `, [car.reservation_id]);
 
         await pool.query(`
-            UPDATE parkingSlots
-            SET status = 'Available'
-            WHERE parkingSlot_id = $1
+            UPDATE parkingSlots SET status='Available'
+            WHERE parkingSlot_id=$1
         `, [car.parking_slot_id]);
+
+        const io = req.app.get("io");
+
+        if (io) io.emit("parkingUpdate");
+
+        await autoReserveFromQueue(car.parkinglot_id,io);
 
         res.json({
             message: "Check Out สำเร็จ",
@@ -437,14 +317,122 @@ export const checkOut = async (req, res) => {
             overtime_hours: overtimeHours,
             total_price: total,
             advance_deposit: car.advance_deposit,
-            remaining: remaining
+            remaining
         });
-
     } catch (error) {
         console.error(error);
+        res.status(500).json({ message: "Check Out ไม่สำเร็จ" });
+    }
+};
 
-        res.status(500).json({
-            message: "Check Out ไม่สำเร็จ"
+export const verifyPin = async (req, res) => {
+    try {
+        const { pin_code,user_id } = req.body;
+
+        if (!pin_code || !user_id)
+            return res.status(400).json({ message: "ข้อมูลไม่ครบ" });
+
+        const reservation = await pool.query(`
+            SELECT r.reservation_id,r.start_time,r.end_time,r.advance_deposit,
+                   v.car_brand,v.car_model,v.license_plate,v.province,
+                   s.parkingSlot_id,s.parkingSlot_name,s.parkingLot_id,
+                   p.parkingLot_name,p.price_per_hour
+            FROM reservations r
+            JOIN vechicles v ON r.vechicle_id=v.vechicle_id
+            JOIN parkingSlots s ON r.parkingSlot_id=s.parkingSlot_id
+            JOIN parkingLots p ON s.parkingLot_id=p.parkingLot_id
+            WHERE r.pin_code=$1
+        `, [pin_code]);
+
+        if (!reservation.rows.length)
+            return res.status(404).json({ message: "PIN ไม่ถูกต้อง" });
+
+        const data = reservation.rows[0];
+
+        const staff = await pool.query(`
+            SELECT parkingLotStaff_id FROM parkingLotStaff
+            WHERE user_id=$1 AND parkingLot_id=$2
+        `, [user_id,data.parkinglot_id]);
+
+        if (!staff.rows.length)
+            return res.status(403).json({ message: "คุณไม่ได้รับผิดชอบลานจอดนี้" });
+
+        const check = await pool.query(`
+            SELECT * FROM check_in_outs
+            WHERE reservation_id=$1
+        `, [data.reservation_id]);
+
+        if (check.rows.length)
+            return res.status(400).json({ message: "Reservation นี้ Check In ไปแล้ว" });
+
+        res.json({
+            message: "PIN ถูกต้อง",
+            data: {
+                reservation_id: data.reservation_id,
+                start_time: data.start_time,
+                end_time: data.end_time,
+                advance_deposit: data.advance_deposit,
+                car_brand: data.car_brand,
+                car_model: data.car_model,
+                license_plate: data.license_plate,
+                province: data.province,
+                parkingSlot_id: data.parkingslot_id,
+                parkingSlot_name: data.parkingslot_name,
+                parkingLot_id: data.parkinglot_id,
+                parkingLot_name: data.parkinglot_name
+            }
         });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "ตรวจสอบ PIN ไม่สำเร็จ" });
+    }
+};
+
+export const sendAnnouncement = async (req, res) => {
+    try {
+        const { user_id,message } = req.body;
+
+        if (!user_id || !message)
+            return res.status(400).json({ message: "กรุณากรอกข้อความประกาศ" });
+
+        const staffLots = await pool.query(`
+            SELECT parkingLot_id FROM parkingLotStaff
+            WHERE user_id=$1
+        `, [user_id]);
+
+        if (!staffLots.rows.length)
+            return res.status(403).json({ message: "คุณไม่ได้รับผิดชอบลานจอดใด" });
+
+        const io = req.app.get("io");
+
+        if (!io)
+            return res.status(500).json({ message: "Socket.io ไม่พร้อมใช้งาน" });
+
+        for (const lot of staffLots.rows) {
+            const users = await pool.query(`
+                SELECT DISTINCT r.user_id
+                FROM reservations r
+                JOIN parkingSlots s ON r.parkingSlot_id=s.parkingSlot_id
+                WHERE s.parkingLot_id=$1 AND r.end_time>=NOW()
+
+                UNION
+
+                SELECT DISTINCT q.user_id
+                FROM queues q
+                WHERE q.parkingLot_id=$1 AND q.status='Waiting'
+            `, [lot.parkinglot_id]);
+
+            for (const user of users.rows) {
+                io.to(`user_${user.user_id}`).emit("announcement", {
+                    parkingLot_id: lot.parkinglot_id,
+                    message
+                });
+            }
+        }
+
+        res.json({ message: "ประกาศสำเร็จ" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "ส่งประกาศไม่สำเร็จ" });
     }
 };

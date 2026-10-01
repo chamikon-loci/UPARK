@@ -1,14 +1,6 @@
 import express from "express";
 
-import {
-    getMyParkingLot,
-    getMyParkingSlots,
-    getMyReservations,
-    getMyCurrentParking,
-    changeSlotStatus,
-    checkIn,
-    checkOut
-} from "../controllers/staff.js";
+import { getMyParkingLot, getMyParkingSlots, getMyReservations, getMyCurrentParking, changeSlotStatus, checkIn, checkOut, verifyPin, sendAnnouncement } from "../controllers/staff.js";
 
 const router = express.Router();
 
@@ -21,5 +13,8 @@ router.put("/changeSlotStatus", changeSlotStatus);
 
 router.post("/checkin", checkIn);
 router.post("/checkout", checkOut);
+
+router.post("/verifyPin", verifyPin);
+router.post("/announcement", sendAnnouncement);
 
 export default router;

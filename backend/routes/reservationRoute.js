@@ -1,12 +1,6 @@
 import express from 'express'
 
-import {
-    reserve,
-    getReservations,
-    getParkingHistory,
-    cancelReservation,
-    getCurrentParking
-} from '../controllers/reservation.js'
+import { reserve, getReservations, getParkingHistory, cancelReservation, getCurrentParking } from '../controllers/reservation.js'
 
 const router = express.Router()
 

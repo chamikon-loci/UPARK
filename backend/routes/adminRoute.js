@@ -1,9 +1,14 @@
 import express from "express";
-import { getallusers, changeRole } from "../controllers/admin.js";
+
+import { getUsers, changeRole, getUserActivities, getManagersAndParkingLots, assignManager } from "../controllers/admin.js";
 
 const router = express.Router();
 
-router.get("/getUsers", getallusers);
-router.put("/changeRole/:id", changeRole);
+router.get("/getUsers", getUsers);
+router.put("/changeRole/:user_id", changeRole);
+router.get("/getUserActivities", getUserActivities);
+
+router.get("/getManagersAndParkingLots", getManagersAndParkingLots);
+router.put("/assignManager", assignManager);
 
 export default router;

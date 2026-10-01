@@ -21,12 +21,16 @@ const Login = ({setUser}) => {
             const res = await axios.post('http://localhost:8080/api/auth/login', form, { withCredentials: true });
             setUser(res.data.user);
             console.log('ผู้ใช้ปัจจุบัน: ', res.data.user.username);
+
             if(res.data.user.role_name === 'Admin')
-                navigate('/Admin')
+                navigate('/Admin');
             else if(res.data.user.role_name === 'Staff')
                 navigate('/Staff');
-            else 
+            else if(res.data.user.role_name === 'Manager')
+                navigate('/Manager');
+            else
                 navigate('/home');
+
         } catch (error) {
             setError('Username หรือ Password ผิด');
         }

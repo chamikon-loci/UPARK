@@ -22,10 +22,16 @@ const ParkingLot = () => {
     const handleLot = async (id) => {
         const res = await axios.get(`http://localhost:8080/api/parkingLot/slots?id=${id}`, {withCredentials: true})
         const result = res.data.data
-        console.log(`ช่องจอดที่พบสำหรับลานจอด ID ${id}`, result)
-        navigate('/home/parkingLot/parkingSlots', { state: { slots: result } })
-    }
 
+        console.log(`ช่องจอดที่พบสำหรับลานจอด ID ${id}`, result)
+
+        navigate('/home/parkingLot/parkingSlots', {
+            state: {
+                slots: result,
+                parkingLot_id: id
+            }
+        })
+    }
 
     return (
         <div className="map-page">
@@ -35,16 +41,19 @@ const ParkingLot = () => {
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
+
                     {parkingLot.map(lot => (
-                        <Marker position={[Number(lot.latitude), Number(lot.longitude)]} 
-                        
-                        eventHandlers={{click: () => handleLot(lot.parkinglot_id)}}/>
+                        <Marker
+                            position={[Number(lot.latitude), Number(lot.longitude)]}
+                            eventHandlers={{
+                                click: () => handleLot(lot.parkinglot_id)
+                            }}
+                        />
                     ))}
                 </MapContainer>
             </div>
         </div>
     );
 };
-
 
 export default ParkingLot;
