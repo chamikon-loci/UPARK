@@ -109,12 +109,12 @@ const Home = ({ user }) => {
 
                     <div className="current-parking-box">
                         {currentParking ? (
-                            <div>
-                                <p style={{ backgroundColor: '#FAFAFA' }}><strong>สถานะ:</strong> กำลังจอด</p>
-                                <p style={{ backgroundColor: '#FAFAFA' }}><strong>รถ:</strong> {currentParking.car_brand} {currentParking.car_model}</p>
-                                <p style={{ backgroundColor: '#FAFAFA' }}><strong>ทะเบียน:</strong> {currentParking.license_plate}</p>
-                                <p style={{ backgroundColor: '#FAFAFA' }}><strong>ลาน:</strong> {currentParking.parkinglot_name}</p>
-                                <p style={{ backgroundColor: '#FAFAFA' }}><strong>ช่อง:</strong> {currentParking.parkingslot_name}</p>
+                            <div style={{ backgroundColor: '#FAFAFA' }}>
+                                <p style={{ backgroundColor: '#FAFAFA' }}><strong style={{ backgroundColor: '#FAFAFA' }}>สถานะ:</strong> กำลังจอด</p>
+                                <p style={{ backgroundColor: '#FAFAFA' }}><strong style={{ backgroundColor: '#FAFAFA' }}>รถ:</strong> {currentParking.car_brand} {currentParking.car_model}</p>
+                                <p style={{ backgroundColor: '#FAFAFA' }}><strong style={{ backgroundColor: '#FAFAFA' }}>ทะเบียน:</strong> {currentParking.license_plate}</p>
+                                <p style={{ backgroundColor: '#FAFAFA' }}><strong style={{ backgroundColor: 'wh#FAFAFA' }}>ลาน:</strong> {currentParking.parkinglot_name}</p>
+                                <p style={{ backgroundColor: '#FAFAFA' }}><strong style={{ backgroundColor: '#FAFAFA' }}>ช่อง:</strong> {currentParking.parkingslot_name}</p>
                                 <p style={{ backgroundColor: '#FAFAFA' }}>
                                     <strong>เวลาสิ้นสุด:</strong> {new Date(currentParking.end_time).toLocaleString()}
                                 </p>

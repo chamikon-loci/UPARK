@@ -83,12 +83,12 @@ const Parking = ({ user }) => {
                             <div className="parking-card" key={parking.reservation_id}>
                                 <h3 style={{ backgroundColor: 'white' }}>Parking #{parking.reservation_id}</h3>
 
-                                <p className="parking-info"><strong>รถ:</strong> {parking.car_brand} {parking.car_model}</p>
-                                <p className="parking-info"><strong>ทะเบียน:</strong> {parking.license_plate}</p>
-                                <p className="parking-info"><strong>ลาน:</strong> {parking.parkinglot_name}</p>
-                                <p className="parking-info"><strong>ช่อง:</strong> {parking.parkingslot_name}</p>
-                                <p className="parking-info"><strong>Check In:</strong> {new Date(parking.check_in_at).toLocaleString()}</p>
-                                <p className="parking-info"><strong>Check Out:</strong> {new Date(parking.check_out_at).toLocaleString()}</p>
+                                <p className="parking-info" style={{ backgroundColor: 'white' }}><strong style={{ backgroundColor: 'white' }}>รถ:</strong> {parking.car_brand} {parking.car_model}</p>
+                                <p className="parking-info" style={{ backgroundColor: 'white' }}><strong style={{ backgroundColor: 'white' }}>ทะเบียน:</strong> {parking.license_plate}</p>
+                                <p className="parking-info" style={{ backgroundColor: 'white' }}> <strong style={{ backgroundColor: 'white' }}>ลาน:</strong> {parking.parkinglot_name}</p>
+                                <p className="parking-info" style={{ backgroundColor: 'white' }}><strong style={{ backgroundColor: 'white' }}>ช่อง:</strong> {parking.parkingslot_name}</p>
+                                <p className="parking-info" style={{ backgroundColor: 'white' }}><strong style={{ backgroundColor: 'white' }}>Check In:</strong> {new Date(parking.check_in_at).toLocaleString()}</p>
+                                <p className="parking-info" style={{ backgroundColor: 'white' }}><strong style={{ backgroundColor: 'white' }}>Check Out:</strong> {new Date(parking.check_out_at).toLocaleString()}</p>
 
                                 {rating ? (
                                     <div style={{ backgroundColor: 'white', marginTop: '15px', padding: '15px' }}>

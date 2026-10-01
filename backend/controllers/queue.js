@@ -56,6 +56,22 @@ export const joinQueue = async (req,res) => {
         if (oldQueue.rows.length)
             return res.status(400).json({message:"รถคันนี้อยู่ใน Queue แล้ว"});
 
+        const activeReservation = await pool.query(`
+            SELECT r.reservation_id
+            FROM reservations r
+            JOIN parkingSlots s ON r.parkingSlot_id=s.parkingSlot_id
+            LEFT JOIN check_in_outs c ON r.reservation_id=c.reservation_id
+            WHERE r.user_id=$1
+            AND r.vechicle_id=$2
+            AND s.parkingLot_id=$3
+            AND c.check_out_status IS NULL
+            AND (r.end_time > NOW() OR c.check_in_status='Checked In')
+            LIMIT 1
+        `,[user_id,vechicle_id,parkingLot_id]);
+
+        if (activeReservation.rows.length)
+            return res.status(400).json({message:"รถคันนี้มี Reservation ที่ลานนี้อยู่แล้ว ไม่สามารถเข้าคิวได้"});
+
         const availableSlot = await pool.query(`
             SELECT parkingSlot_id
             FROM parkingSlots

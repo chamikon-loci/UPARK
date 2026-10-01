@@ -13,6 +13,7 @@
     "axios": "^1.20.0",
     "axois": "^0.0.1-security",
     "leaflet": "^1.9.4",
+    "leaflet-routing-machine": "^3.2.12",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-leaflet": "^5.0.0",

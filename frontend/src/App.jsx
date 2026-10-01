@@ -15,7 +15,6 @@ import Staff from './pages/Staff';
 import Reservation from './pages/Reservation';
 import Transaction from './pages/Transaction';
 import Parking from './pages/Parking';
-import Rating from './pages/Rating';
 import Manager from './pages/Manager';
 
 function App() {
@@ -86,7 +85,6 @@ function App() {
         <Route path="/home/reservation" element={<Reservation user={user} />} />
         <Route path="/home/transaction" element={<Transaction user={user} />} />
         <Route path="/home/parking" element={<Parking user={user} />} />
-        <Route path="/home/rating" element={<Rating user={user} />} />
         <Route path="/Manager" element={<Manager user={user} />}/>
       </Routes>
     </BrowserRouter>

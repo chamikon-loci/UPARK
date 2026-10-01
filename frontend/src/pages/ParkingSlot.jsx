@@ -178,9 +178,8 @@ const ParkingSlot = ({ user, car }) => {
                 <h1>ช่องจอด</h1>
 
                 {slots.length > 0 ? (
-                    <div>
+                    <div style={{ backgroundColor: 'white' }}>
                         <h2 style={{ backgroundColor: "white" }}>{slots[0].parkinglot_name}</h2>
-
                         <div style={{ backgroundColor: "white" }}>
                             <p style={{ backgroundColor: "white" }}>เวลาเริ่ม</p>
                             <input type="datetime-local" value={startTime} onChange={e => setStartTime(e.target.value)} style={{ backgroundColor: "white" }} />
@@ -217,7 +216,7 @@ const ParkingSlot = ({ user, car }) => {
                         )}
                     </div>
                 ) : (
-                    <div className="no-slot">ไม่พบช่องจอด</div>
+                    <div className="no-slot" style={{ backgroundColor: 'white' }}>ไม่พบช่องจอด</div>
                 )}
             </div>
         </div>

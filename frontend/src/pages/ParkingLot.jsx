@@ -1,54 +1,63 @@
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
-import {MapContainer, TileLayer, Marker} from 'react-leaflet'
-import 'leaflet/dist/leaflet.css'
-import '../styles/map.css'
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import "../styles/map.css";
 
 const ParkingLot = () => {
+    const { state } = useLocation();
+    const navigate = useNavigate();
+    const parkingLot = state?.parkingLot;
 
-    const location = useLocation();
-    const parkingLot = location.state?.parkingLot;
-
-    if (!parkingLot) {
-        return (
-            <div>
-                ไม่พบข้อมูลลานจอด
-            </div>
-        );
-    }
-    
-    const navigate = useNavigate()
+    if (!parkingLot) return <div>ไม่พบข้อมูลลานจอด</div>;
 
     const handleLot = async (id) => {
-        const res = await axios.get(`http://localhost:8080/api/parkingLot/slots?id=${id}`, {withCredentials: true})
-        const result = res.data.data
+        try {
+            const res = await axios.get(
+                `http://localhost:8080/api/parkingLot/slots?id=${id}`,
+                { withCredentials:true }
+            );
 
-        console.log(`ช่องจอดที่พบสำหรับลานจอด ID ${id}`, result)
+            navigate("/home/parkingLot/parkingSlots", {
+                state:{
+                    slots:res.data.data,
+                    parkingLot_id:id
+                }
+            });
+        } catch(error) {
+            console.log("โหลดช่องจอดไม่สำเร็จ", error);
+        }
+    };
 
-        navigate('/home/parkingLot/parkingSlots', {
-            state: {
-                slots: result,
-                parkingLot_id: id
-            }
-        })
-    }
+    const handleNavigate = (lot) => {
+        window.open(
+            `https://www.google.com/maps/dir/?api=1&destination=${lot.latitude},${lot.longitude}`,
+            "_blank"
+        );
+    };
 
     return (
         <div className="map-page">
             <div className="map-box">
-                <MapContainer center={[13.75, 100.52]} zoom={13}>
-                    <TileLayer 
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                <MapContainer center={[13.75,100.52]} zoom={13}>
+                    <TileLayer
+                        attribution="OpenStreetMap"
                         url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
 
                     {parkingLot.map(lot => (
                         <Marker
+                            key={lot.parkinglot_id}
                             position={[Number(lot.latitude), Number(lot.longitude)]}
-                            eventHandlers={{
-                                click: () => handleLot(lot.parkinglot_id)
-                            }}
-                        />
+                        >
+                            <Popup>
+                                <h3 style={{ backgroundColor: 'white' }}>{lot.parkinglot_name}</h3>
+                                <p style={{ backgroundColor: 'white' }}>ราคา {lot.price_per_hour} บาท/ชั่วโมง</p>
+                                <button onClick={() => handleNavigate(lot)} style={{ backgroundColor: 'white' }}>นำทางไปลานจอด</button>
+                                <br/><br/>
+                                <button onClick={() => handleLot(lot.parkinglot_id)} style={{ backgroundColor: 'white' }}>ดูช่องจอด</button>
+                            </Popup>
+                        </Marker>
                     ))}
                 </MapContainer>
             </div>
