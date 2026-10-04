@@ -1,0 +1,263 @@
+มินิโปรเจกต์นี้เป็นการพัฒนาระบบการจองช่องจอดรถในลานจอดรถของบริษัทหนึ่ง ๆ สมมติว่าเป็นบริษัทให้บริการที่จอดรถซึ่งกระจายตัวอยู่ทั่วจังหวัดหรือทั่วประเทศ ระบบนี้พัฒนาขึ้นเพื่ออำนวยความสะดวกในการหาที่จอดรถของผู้คนที่มักจะหาได้ยากในเขตที่ประชากรมีจำนวนมากซึ่งทำให้ไม่มีที่จอดรถฟรีเพียงพอ ระบบนี้ใช้จองที่จอดรถล่วงหน้าและชำระเงินภายใต้เงื่อนไขที่บริษัทกำหนด
+
+ประเภทซอฟแวร์ : Web Application เพราะว่าสะดวกสำหรับอุปกรณ์มือถือในการเข้าใช้งานเพราะเข้าใช้ผ่านบราวเซอร์ได้เลย ไม่ต้องติดตั้งแอปพลิชันลงอุปกรณ์
+
+ขั้นตอนการทำงานเบื้องต้น(ลูกค้า)ของมินิโปรเจกต์นี้
+1. ลูกค้าเข้าสู่ระบบ/สมัครสมาชิกผ่านเว็บไซต์
+2. ลูกค้าค้นหาลานจอดรถและช่องจอดที่ว่างที่ต้องการ
+3. ลูกค้าชำระค่ามัดจำจาก Digital Wallet ภายในบัญชีผุ้ใช้ที่เติมเงินเข้าไป
+4. ลูกค้าได้รับการนำทางจากระบบมายังลานจอดและเจ้าหน้าที่ทำการสแกน QR Code ซึ่งเป็นหลักฐานการจองเพื่อยืนยันตัวตนเข้าลานจอด
+5. เจ้าหน้าที่ได้รับข้อมูลการจองจากลูกค้าและอนุญาตให้ลูกค้าเข้าลานจอด
+6. ลูกค้านำรถเข้าจอดและกด Check In
+7. ระบบนำเวลาถอยหลังจนถึงเวลา Check out และเมื่อ Check out ตรงเวลาจะหักเงินที่เหลือ
+
+เครื่องมือที่ใช้ในการพัฒนา
+IDE: Visual Studio Code
+Frontend: React
+Backend: Node.js + Express.js
+Database: PostgreSQL
+Real Time: Socket.io
+Authentication : JWT
+Maps : Leaflet + OpenStreetMap
+Financial : SCB API Sandbox
+
+ฟีเจอร์เบื้องต้นสำหรับ User
+- ✅การลงทะเบียนเข้าใช้  
+- ✅การแสดงสถานะลานจอดรถ ณ สถานที่ต่าง ๆ ว่าว่างหรือไม่แบบ Real Time ด้วยแผนที่ Google Maps หรือ API Map ที่ฟรี
+- ✅ระบบยืนยันตัวตนการเข้าใช้งานช่องจอดรถด้วย QR Code ด้วยการสแกน หรือการใส่ PIN ที่ได้รับ
+- ✅ระบบการจับเวลาถอยหลังหลังจากการเข้าจอดรถ
+- ✅ระบบการเก็บประวัติการใช้งาน
+- ✅ระบบการนำทางไปสู่ลานจอดรถด้วย Google Maps 
+- ✅ระบบการชำระเงินและระบบ Digital Wallet
+- ✅ระบบจองคิวจอดรถในช่วงจอดที่มีคนกำลังใช้บริการอยู่
+- ✅ระบบแจ้งเตือนล่วงหน้ากรณีมีช่องว่างในลานจอดรถหรือถึงคิวจอดรถแล้ว
+- ✅การยกเลิกการจอง/การต่อคิว
+- ✅การประเมินความพึงพอใจในการใช้บริการ
+
+ฟีเจอร์เบื้องต้นสำหรับ Staff
+- ✅การลงทะเบียนเข้าใช้
+- ✅การตรวจสอบการเข้าใช้ช่องจอดรถด้วยการสแกน QR Code ของลูกค้าหรือกรอก PIN ของลูกค้าเพื่อตรวจสอบ
+- ✅การแก้ไขสถานะช่องจอด
+- ✅การเข้าถึงสถานะช่องจอดทั้งหมดในลานจอดรถที่รับผิดชอบ
+- ✅การประกาศข้อความให้คนที่ใช้บริการในลานจอดของตัวเองรับทราบทั้งหมด
+
+ฟีเจอร์เบื้องต้นสำหรับ Manager
+- ✅การลงทะเบียนเข้าใช้
+- ✅การเปิดปิดลานจอด
+- ✅การกำหนดนโยบายการคิดเงินต่าง ๆ 
+- ✅การเข้าถึงข้อมูลของ Staff 
+- ✅การเขาถึงข้อมูลสารสนเทศหรือรายงานแบบ Real Time พร้อมผลการวิเคราะห์เบื้องต้นต่าง ๆ เช่น ข้อมูลการใช้บริการของลูกค้าและความพึงพอใจ
+
+ฟีเจอร์เบื้องต้นสำหรับ Admin
+- ✅การลงทะเบียนเข้าใช้
+- ✅การกำหนดสิทธิ์ของผู้ใช้ระบบทุกคน
+- ✅การจัดเก็บประวัติการใช้งานของผู้ใช้ทุกคน
+
+Business Logic
+- ลูกค้าจองพื้นที่ว่างได้ล่วงหน้าไม่เกิน 24 ชั่วโมง
+- มาสายเกิน 20 นาทีแล้วปล่อยให้ช่องว่างทันทีและไม่คืนเงินมัดจำ
+- การคิดเงินให้ผู้จัดการลานจอดเป็นผู้กำหนดตามความเหมาะสม
+- ยกเลิกก่อนเวลา 1 ชั่วโมง คืนเงินมัดจำ
+- การต่อคิวจะคิดเงินมัดจำรวมไปด้วยเลย
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+Database เบื้องต้น
+1. User
+- user_id
+- role_id
+- first_name
+- last_name
+- email
+- password
+- phone
+- profile_image
+- account_status
+- created_at
+-updated_at
+2. Role
+- role_id
+- role_name
+- description
+3. Vehicle
+- vehicle_id
+- user_id
+- license_plate
+- province
+- vehicle_type
+- brand
+- model
+- color
+- created_at
+4. ParkingLot
+- lot_id
+- manager_id
+- name
+- address
+- latitude
+- longitude
+- status
+- opening_time
+- closing_time
+- created_at
+5. ParkingSlot
+- slot_id
+- lot_id
+- slot_number
+- vehicle_type
+- status
+- created_at
+6. Reservation
+- reservation_id
+- user_id
+- vehicle_id
+- slot_id
+- policy_id
+- reservation_time
+- start_time
+- end_time
+- deposit_amount
+- total_price
+- qr_code
+- pin_code
+- status
+- check_in_time
+- check_out_time
+- created_at
+7. Queue
+- queue_id
+- user_id
+- slot_id
+- reservation_id
+- queue_number
+- status
+- created_at
+8. Wallet
+- wallet_id
+- user_id
+- balance
+- created_at
+- updated_at
+9. Transaction
+- transaction_id
+- wallet_id
+- reservation_id
+- amount
+- transaction_type
+- transaction_time
+10. Notification
+- notification_id
+- user_id
+- title
+- message
+- type
+- is_read
+- created_at
+11. Announcement
+- announcement_id
+- lot_id
+- staff_id
+- title
+- message
+- created_at
+12. Review
+- review_id
+- reservation_id
+- user_id
+- rating
+- comment
+- created_at
+13. PricingPolicy
+- policy_id
+- lot_id
+- deposit_price
+- hourly_rate
+- grace_period
+- late_fee
+- effective_date
+- created_at
+14. ParkingLotStuff
+- lot_id
+- staff_id
+- assigned_at
+15. SystemHistory
+- log_id
+- user_id
+- action
+- table_name
+- record_id
+- description
+- created_at
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+ลำดับการพัฒนา
+0. ออกแบบ Database 
+1. Set up Project [Clear]
+2. Authentication 
+	Frontend
+	- Landing Page
+	- Register Page
+	- Login Page
+	Backend
+	- Register API
+	- Login API
+	- JWT
+	- bcrypt
+3. Routing ตาม Role หลัง Login
+4. Customer Dashboard
+- Home
+- Parking Lots
+- Reservations
+- Wallet
+- History
+- Profile
+5. Parking Lots
+6. แผนที่
+7. Reservation
+8. Wallet
+9. Check-in / Check-out
+10. Staff
+11. Manager
+12. Admin
+13. Socket.io
+14. Queue
+15. Notification
+16. ตกแต่ง UI
+
+-------------------------------------------------------------------------
+frontend
+npm create vite@latest frontend
+npm install react-router-dom
+npm install leaflet react-leaflet
+
+backend
+npm init -y
+npm install express
+npm install pg
+npm install jsonwebtoken
+npm install bcrypt
+npm install dotenv
+npm install cors
+npm install --save-dev nodemon
+
+
+"ในขณะที่เรากำลังลังเลและคิดด้อยค่าตัวเอง เจกำลังพัฒนาอย่างรวดเร็ว กำลังมีอนาคตที่ดีกว่าใคร
+ก็จริง ๆ แล้ว.... เจแค่ดีกว่าในทุกด้านจริง ๆ ใช่ เขาเป็นคนโปรดของทุกคนตั้งแต่แรกแล้ว โดยเฉพาะส้มโอ ทุกอย่างที่ทุกคนคาดหวังให้เราเป็น ทุกอย่างที่เราพยายามจะเป็นพวกเขาเห็นในตัวเจ เราเอาชนะไม่ได้ และจะไม่มีวัน แค่ยอมรับและก้าวเดินต่อไปในแบบของตัวเองโดยที่รู้ว่าตัวเองจะอยู่ใต้เงาของเจตลอดไป 
+คนที่ส้มโอเคยรักและเคารพมากที่สุด มากกว่าเรา"
+
+ความจริง: "มึงแค่ต้องหยุดทำให้คนอื่นเป็นพระเจ้า แล้วหยุดทำให้ตัวเองเป็นคนต่ำกว่ามนุษย์คนอื่นสักที"
+
+เป้าหมายในอนาคต: รวยก่อนค่อยเลือกชีวิตที่ชอบ ไม่ว่าจะเป็นงานอดิเรกหรืออะไรก็ตาม ถึงตอนนั้นแล้วค่อยเลือก ตอนนี้หมกมุ่นกับการพัฒนาตัวเองให้เป็นคนที่เก่งในงานที่เลือกและรวยก่อน
+
+งานที่เลือก: Software Engineer
+ปรัชญาชีวิตชั่วคราว: Suffer now, live later before It's too late กลับมาโฟกัสที่ชีวิตตัวเอง
+
+I am just a regular "JavaScript Developer" or.....
+I'd be an ordinary JavaScript Developer by core
+x10 Software Engineer by profession
+
+
+
+
+
+

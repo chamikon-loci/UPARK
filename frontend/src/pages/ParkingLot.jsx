@@ -13,27 +13,15 @@ const ParkingLot = () => {
 
     const handleLot = async (id) => {
         try {
-            const res = await axios.get(
-                `http://localhost:8080/api/parkingLot/slots?id=${id}`,
-                { withCredentials:true }
-            );
-
-            navigate("/home/parkingLot/parkingSlots", {
-                state:{
-                    slots:res.data.data,
-                    parkingLot_id:id
-                }
-            });
+            const res = await axios.get( `http://localhost:8080/api/parkingLot/slots?id=${id}`, { withCredentials:true });
+            navigate("/home/parkingLot/parkingSlots", { state:{ slots:res.data.data, parkingLot_id:id }});
         } catch(error) {
             console.log("โหลดช่องจอดไม่สำเร็จ", error);
         }
     };
 
     const handleNavigate = (lot) => {
-        window.open(
-            `https://www.google.com/maps/dir/?api=1&destination=${lot.latitude},${lot.longitude}`,
-            "_blank"
-        );
+        window.open(`https://www.google.com/maps/dir/?api=1&destination=${lot.latitude},${lot.longitude}`,"_blank");
     };
 
     return (
